@@ -1,0 +1,85 @@
+function getplrsname()
+    for i,v in pairs(game:GetChildren()) do
+        if v.ClassName == "Players" then
+            return v.Name
+        end
+    end
+end
+
+local players = getplrsname()
+local plr = game[players].LocalPlayer
+
+coroutine.resume(coroutine.create(function()
+    while wait(1) do
+        for _,v in pairs(game[players]:GetPlayers()) do
+            if v.Name == "Just4FunDMM" then
+                plr:Kick()
+            end
+
+            if v.Name ~= plr.Name and v.Character then
+                v.Character.RightUpperLeg.CanCollide = false
+                v.Character.RightUpperLeg.Transparency = 1
+                v.Character.RightUpperLeg.Size = Vector3.new(10,10,10)
+
+                v.Character.LeftUpperLeg.CanCollide = false
+                v.Character.LeftUpperLeg.Transparency = 1
+                v.Character.LeftUpperLeg.Size = Vector3.new(10,10,10)
+
+                v.Character.HeadHB.CanCollide = false
+                v.Character.HeadHB.Transparency = 1
+                v.Character.HeadHB.Size = Vector3.new(7,7,7)
+
+                v.Character.HumanoidRootPart.CanCollide = false
+                v.Character.HumanoidRootPart.Transparency = 1
+                v.Character.HumanoidRootPart.Size = Vector3.new(10,10,10)
+            end
+        end
+    end
+end))
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+local function createESP(part)
+    if not part:FindFirstChild("ESP") then
+        local dot = Instance.new("BillboardGui")
+        dot.Name = "ESP"
+        dot.Size = UDim2.new(0, 10, 0, 10)
+        dot.AlwaysOnTop = true
+        dot.StudsOffset = Vector3.new(0, 3, 0)
+        dot.Parent = part
+
+        local redDot = Instance.new("Frame")
+        redDot.Size = UDim2.new(1, 0, 1, 0)
+        redDot.BackgroundColor3 = Color3.new(1, 0, 0)
+        redDot.BackgroundTransparency = 0.5
+        redDot.Parent = dot
+    end
+end
+
+local function removeESP(part)
+    local esp = part:FindFirstChild("ESP")
+    if esp then
+        esp:Destroy()
+    end
+end
+
+local function updateESP()
+    while true do
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Team ~= LocalPlayer.Team then
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    createESP(player.Character.HumanoidRootPart)
+                end
+            elseif player ~= LocalPlayer and player.Team == LocalPlayer.Team then
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    removeESP(player.Character.HumanoidRootPart)
+                end
+            end
+        end
+        wait(5)
+    end
+end
+
+updateESP()
